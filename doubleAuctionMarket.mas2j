@@ -10,8 +10,6 @@ MAS doubleAuctionMarket {
 			// 5. Maximum percentage of broken traders (if greater, stop simulation)
 			// 6. Step time (ms)
 
-    agents: trader zi_trader
-							[beliefs="operation_beta(1,1), sell_beta(1,1), cash_beta(1,1), min_cash(10), max_cash(10),shares_beta(1,1), min_shares(10), max_shares(10), variability_beta(1,1), min_variability(0.1), max_variability(0.1)"]
-	            #3;
+    agents: ma_trader; trader zi_trader #3;
 	aslSourcePath: "src/asl";
 }

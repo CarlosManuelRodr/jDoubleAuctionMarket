@@ -1,9 +1,9 @@
 /* Include generic trader behavior */
 
-{ include("./generic_trader.asl") }
-
-/* Initial beliefs for a Zero Intelligence (ZI) Trader */
-
+{ include("./generic_trader.asl") 
+	
+}
+/* Initial beliefs and rules */
 operation_beta(1,1).
 sell_beta(1,1).
 cash_beta(1,1).
@@ -18,8 +18,6 @@ max_variability(0.1).
 
 /* Plans */
 
-// Set-up plan
-
 +!init :
 	operation_beta(OpA,OpB) & sell_beta(SellA,SellB) & variability_beta(VarA,VarB) & min_variability(MinVar) & max_variability(MaxVar)
   <- +probability(operation, tools.beta(OpA,OpB));
@@ -27,12 +25,9 @@ max_variability(0.1).
      +variability(math.floor(tools.beta(VarA,VarB) * (MaxVar-MinVar)) + MinVar);
      !generic_init.
 
-// Sell plans
 +!sell :
 	shares(Shares) & Shares > 0 & variability(Variability) & (market_price(MarketPrice) | (init_cash(InitCash) & init_shares(InitShares) & MarketPrice = InitShares/InitCash) )
-   <- Quantity = tools.uniform_int(1,Shares);
-      Price = tools.normal(MarketPrice, MarketPrice * Variability);
-      !sell(Quantity,Price).
+   <- none.
 
 +!sell : shares(0)
    <- .println("Not enought shares to sell");
@@ -44,9 +39,7 @@ max_variability(0.1).
 	(market_price(MarketPrice) | (init_cash(InitCash) &
 		init_shares(InitShares) & MarketPrice = InitShares/InitCash) )
  	<- TotalPrice = tools.uniform_int(0,Cash);
-     Price = tools.normal(MarketPrice, MarketPrice * Variability);
-	   Quantity = math.floor(TotalPrice/Price);
-     !buy(Quantity,Price).
+     none.
 
 +!buy : cash(0)
    <- .println("Not enought cash to buy");

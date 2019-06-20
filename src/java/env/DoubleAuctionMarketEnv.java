@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.Locale;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import jason.asSyntax.directives.FunctionRegister;
@@ -41,6 +42,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 	private double managerIncome = 0;   /// Amount of money of the market maker
 	private double marketPrice = 0;     /// Market price
 	private double oldMarketPrice = 0;  /// Market price at step-1
+	private ArrayList<Term> priceList = new ArrayList<Term>();
 
 	/// Number of broken agents
 	private AtomicInteger brokensReceived = new AtomicInteger();
@@ -289,13 +291,16 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 			logger.info("Starting step " + step);
 			if (marketPrice > 0)
 			{
-				Literal l_market_price = ASSyntax.createLiteral("market_price",
-					ASSyntax.createNumber(marketPrice));
+				Literal l_market_price = ASSyntax.createLiteral("market_price", ASSyntax.createNumber(marketPrice));
 				addPercept(l_market_price);
 			}
-			Literal l_new_step = ASSyntax.createLiteral("step",
-				ASSyntax.createNumber(step));
+			Literal l_new_step = ASSyntax.createLiteral("step", ASSyntax.createNumber(step));
 			addPercept(l_new_step);
+			
+			// Add market price to list
+			priceList.add(ASSyntax.createNumber(marketPrice));
+			Literal l_price_list = ASSyntax.createLiteral("price_list", ASSyntax.createList(priceList));
+			addPercept(l_price_list);
 		}
 		else
 		{
