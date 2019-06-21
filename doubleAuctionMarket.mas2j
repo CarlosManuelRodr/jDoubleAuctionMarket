@@ -1,7 +1,7 @@
 MAS doubleAuctionMarket {
 	infrastructure: Centralised
 
-    environment: env.DoubleAuctionMarketEnv(3, spread, 4, 5000, 30, 6000)
+    environment: env.DoubleAuctionMarketEnv(100, spread, 4, 5000, 30, 6000)
 			// Parameters:
 			// 1. Number of traders
 			// 2. Price policy (i.e. min, max, avg, spread)
@@ -10,6 +10,6 @@ MAS doubleAuctionMarket {
 			// 5. Maximum percentage of broken traders (if greater, stop simulation)
 			// 6. Step time (ms)
 
-    agents: ma_trader; trader zi_trader #3;
+    agents: ma_trader #90; trader zi_trader #10;
 	aslSourcePath: "src/asl";
 }

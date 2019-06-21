@@ -29,6 +29,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 		FunctionRegister.addFunction(beta.class);
 		FunctionRegister.addFunction(uniformInt.class);
 		FunctionRegister.addFunction(normal.class);
+		FunctionRegister.addFunction(movingAverage.class);
 	}
 
 	static Logger logger = Logger.getLogger(DoubleAuctionMarketEnv.class.getName());
@@ -89,7 +90,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 			ftraders = new PrintWriter(new FileWriter("./logs/" + dateFolder +
 				"/traders.txt"));
 			ftraders.print(header);
-			header = "TraderName,InitIncome,InitShares,OpProb,SellProb,Income,Shares, "
+			header = "TraderName,InitIncome,InitShares,OpProb,SellProb,Income,Shares,"
 					+ "Wealth,NbSellSuccess,NbSellFailures,NbBuySuccess,NbBuyFailures\n";
 			ftradersCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder +
 				"/traders.csv"));
@@ -299,6 +300,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 			
 			// Add market price to list
 			priceList.add(ASSyntax.createNumber(marketPrice));
+			if (priceList.size() > 100)
+				priceList.remove(0);
+			
 			Literal l_price_list = ASSyntax.createLiteral("price_list", ASSyntax.createList(priceList));
 			addPercept(l_price_list);
 		}
@@ -389,7 +393,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 						                  traderName, initIncome, initShares, opProb, sellProb,
 										  income, shares, income+shares*marketPrice,
 										  nbSellSuccess, nbSellFailures, nbBuySuccess, nbBuyFailures);
-						ftradersCSV.printf(Locale.US, "%s,%.2f,%d,%.2f,%.2f,%.2f,%d,%.2f, "
+						ftradersCSV.printf(Locale.US, "%s,%.2f,%d,%.2f,%.2f,%.2f,%d,%.2f,"
 								+ "%d,%d,%d,%d\n",
 						                  traderName, initIncome, initShares, opProb, sellProb,
 										  income, shares, income+shares*marketPrice,
