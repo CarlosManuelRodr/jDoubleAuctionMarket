@@ -78,25 +78,23 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 		try
 		{
 			String header = "Step Price ManagerIncome NbOp NbSh\n";
-			fmarket = new PrintWriter(new FileWriter("./logs/" + dateFolder +
-				"/market.txt"));
+			fmarket = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/market.txt"));
 			fmarket.print(header);
 			header = "Step,Price,ManagerIncome,NbOp,NbSh\n";
-			fmarketCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder +
-				"/market.csv"));
+			fmarketCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/market.csv"));
 			fmarketCSV.print(header);
 
-			header = "TraderName InitIncome InitShares OpProb SellProb Income Shares "
-					+ "Wealth NbSellSuccess NbSellFailures NbBuySuccess NbBuyFailures\n";
-			ftraders = new PrintWriter(new FileWriter("./logs/" + dateFolder +
-				"/traders.txt"));
+			header = "TraderName InitIncome InitShares OpProb SellProb Income Shares " 
+			         + "Wealth NbSellSuccess NbSellFailures NbBuySuccess NbBuyFailures\n";
+			ftraders = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/traders.txt"));
 			ftraders.print(header);
 			header = "TraderName,InitIncome,InitShares,OpProb,SellProb,Income,Shares,"
 					+ "Wealth,NbSellSuccess,NbSellFailures,NbBuySuccess,NbBuyFailures\n";
-			ftradersCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder +
-				"/traders.csv"));
+			ftradersCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/traders.csv"));
 			ftradersCSV.print(header);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -143,7 +141,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 		{
 			try
 			{
-				// jason 2.4 adds time to stopMAS
+				// Jason 2.4 adds time to stopMAS
 				// getEnvironmentInfraTier().getRuntimeServices().stopMAS;
 				getEnvironmentInfraTier().getRuntimeServices().stopMAS();
 			}
@@ -180,10 +178,12 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				opSell = itSells.next();
 				opBuy = itBuys.next();
 			}
+			
 			while (!priceCrossing && availableOperations)
 			{
 				priceSell = opSell.getPrice();
 				priceBuy = opBuy.getPrice();
+				
 				if (priceSell <= priceBuy)
 				{
 					nbOperations++;
@@ -199,6 +199,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 					{
 						sharesTraded = sellShares;
 						opBuy.setShares(buyShares - sharesTraded);
+						
 						if (itSells.hasNext())
 							opSell = itSells.next();
 						else
@@ -208,6 +209,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 					{
 						sharesTraded = buyShares;
 						opSell.setShares(sellShares - sharesTraded);
+						
 						if (itBuys.hasNext())
 							opBuy = itBuys.next();
 						else
@@ -216,6 +218,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 					else // (sellShares == buyShares)
 					{
 						sharesTraded = sellShares;
+						
 						if (itSells.hasNext() && itBuys.hasNext())
 						{
 							opSell = itSells.next();
@@ -260,10 +263,10 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 
 					// Notify traders
 					l_success_sell = ASSyntax.createLiteral("operation_success",
-														   ASSyntax.createNumber(sellerIdOperation),
-														   ASSyntax.createAtom(buyerName),
-														   n_sharesTraded,
-														   n_priceOpSell);
+														    ASSyntax.createNumber(sellerIdOperation),
+														    ASSyntax.createAtom(buyerName),
+														    n_sharesTraded,
+														    n_priceOpSell);
 					addPercept(sellerName, l_success_sell);
 					l_success_buy = ASSyntax.createLiteral("operation_success",
 														   ASSyntax.createNumber(buyerIdOperation),
@@ -276,16 +279,21 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				else
 					priceCrossing = true;
 			}
+			
 			if (marketPrice > 0)
 				marketPrice = marketPrice/nbOperations;
-			else marketPrice += oldMarketPrice;
+			else
+				marketPrice += oldMarketPrice;
 
-			try {
+			try
+			{
 				fmarket.printf(Locale.US, "%4d %5.2f %13.2f %4d %4d\n",
 								step, marketPrice, managerIncome, nbOperations, nbSharesTraded);
 				fmarketCSV.printf(Locale.US, "%d,%.2f,%.2f,%d,%d\n",
 								  step, marketPrice, managerIncome, nbOperations, nbSharesTraded);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 			// Market clean-up
@@ -325,7 +333,8 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 	 * @param timeout	if timeout has been exceeded
 	 */
 	@Override
-    protected void stepFinished(int step, long time, boolean timeout) {
+    protected void stepFinished(int step, long time, boolean timeout)
+	{
 		if (timeout)
 			logger.info("Timeout reached in step " + step);
 	}
@@ -341,8 +350,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				agent_id_operation = (int)((NumberTerm)action.getTerm(0)).solve();
 				int shares = (int)((NumberTerm)action.getTerm(1)).solve();
 				double price = ((NumberTerm)action.getTerm(2)).solve();
-				listOfSells.add(new Operation(OperationType.SELL, ag, agent_id_operation,
-					shares, price));
+				listOfSells.add(new Operation(OperationType.SELL, ag, agent_id_operation, shares, price));
 			} 
 			catch (NoValueException e)
 			{
@@ -359,8 +367,7 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				agent_id_operation = (int)((NumberTerm)action.getTerm(0)).solve();
 				int shares = (int)((NumberTerm)action.getTerm(1)).solve();
 				double price = ((NumberTerm)action.getTerm(2)).solve();
-				listOfBuys.add(new Operation(OperationType.BUY, ag, agent_id_operation,
-					shares, price));
+				listOfBuys.add(new Operation(OperationType.BUY, ag, agent_id_operation, shares, price));
 			}
 			catch (NoValueException e)
 			{
@@ -387,7 +394,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 			// NbSellSucc,NbSellFail,NbBuySucc,NbBuyFail)
 			String traderName = ((Atom)action.getTerm(0)).getFunctor();
 			double initIncome;
-			try {
+			
+			try
+			{
 				initIncome = ((NumberTerm)action.getTerm(1)).solve();
 				int initShares = (int)((NumberTerm)action.getTerm(2)).solve();
 				double opProb = ((NumberTerm)action.getTerm(3)).solve();
@@ -434,7 +443,6 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		} 
 		else 
 		{

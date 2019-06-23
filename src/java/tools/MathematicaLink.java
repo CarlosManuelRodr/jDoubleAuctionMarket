@@ -18,11 +18,13 @@ public class MathematicaLink
 	{
 		logger.info("Mathlink started");
         ml = MathLinkFactory.createKernelLink("-linkmode launch -linkname 'math -mathlink'");
+        
 		// Get rid of the initial InputNamePacket the kernel will send
         // when it is launched.
         ml.discardAnswer();
         PrintWorkingDirectory();
         
+        // Load strategy as an external Wolfram Language package
         ml.evaluate("<< Strategy.wl");
         ml.discardAnswer();
 	}
@@ -60,44 +62,5 @@ public class MathematicaLink
 		
 		output += "}";
 		return output;
-	}
-	
-	public static void Test()
-	{
-        try
-        {        	
-            ml.evaluate("SayPuto[]");
-            ml.waitForAnswer();
-            String asd = ml.getString();
-            System.out.println(asd);
-            
-            ml.evaluate("2+2");
-            ml.waitForAnswer();
-
-            int result = ml.getInteger();
-            System.out.println("2 + 2 = " + result);
-
-
-            // Here's how to send the same input, but not as a string:
-            /*ArrayList<Integer> lista = new ArrayList<Integer>();
-            lista.add(10);
-            lista.add(15);
-            lista.add(20);
-            lista.add(25);
-            
-            String f = "Fuck[" + IntegerListToString(lista) + "]";
-            ml.evaluate(f);
-            ml.waitForAnswer();
-            double jaja = ml.getDouble();
-            System.out.println(jaja);*/
-        }
-        catch (MathLinkException e)
-        {
-            System.out.println("MathLinkException occurred: " + e.getMessage());
-        }
-        finally
-        {
-            ml.close();
-        }
 	}
 }
