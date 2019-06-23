@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry excluding="*.asl" kind="src" path="src/asl"/>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="lib" path="/home/carlos/Documentos/Doctorado/Agentes/jason/libs/jason-2.4-SNAPSHOT.jar">
@@ -10,5 +10,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/flanagan.jar"/>
 	<classpathentry kind="lib" path="libs/cartago-2.3.jar"/>
+	<classpathentry kind="lib" path="/opt/Mathematica/SystemFiles/Links/JLink/JLink.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/opt/Mathematica/SystemFiles/Links/JLink/Documentation/JavaDoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/opt/Mathematica/SystemFiles/Links/JLink/SystemFiles/Libraries/Linux-x86-64"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

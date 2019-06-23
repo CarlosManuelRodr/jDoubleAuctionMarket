@@ -24,12 +24,15 @@ import tools.*;
  */
 enum PricePolicy {MAX, MIN, AVG, SPREAD};
 
-public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
-	static {
+public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
+{
+	static
+	{
 		FunctionRegister.addFunction(beta.class);
 		FunctionRegister.addFunction(uniformInt.class);
 		FunctionRegister.addFunction(normal.class);
 		FunctionRegister.addFunction(movingAverage.class);
+		FunctionRegister.addFunction(mathematicaStrategy.class);
 	}
 
 	static Logger logger = Logger.getLogger(DoubleAuctionMarketEnv.class.getName());
@@ -50,21 +53,19 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 	/// Maximum percentage of broken traders (if greater, stop simulation)
 	private float brokensAllowed = 1;
 
-	private boolean end = false; /// End flag activated when reaching the final step
+	private boolean end = false;        /// End flag activated when reaching the final step
 	private Integer endsReceived = 0;	/// Agents ready for the MAS finalization
 
-	private ConcurrentSkipListSet<Operation> listOfBuys =
-		new ConcurrentSkipListSet<Operation>();  // List of BUY operations
-	private ConcurrentSkipListSet<Operation> listOfSells =
-		new ConcurrentSkipListSet<Operation>(); // List of SELL operations
+	private ConcurrentSkipListSet<Operation> listOfBuys = new ConcurrentSkipListSet<Operation>();  // List of BUY operations
+	private ConcurrentSkipListSet<Operation> listOfSells = new ConcurrentSkipListSet<Operation>(); // List of SELL operations
 
-	private PrintWriter fmarket;			/// Market log file
-	private PrintWriter ftraders;			/// Traders log file
+	private PrintWriter fmarket;	    /// Market log file
+	private PrintWriter ftraders;		/// Traders log file
 	private PrintWriter fmarketCSV;		/// Market log file CSV
 	private PrintWriter ftradersCSV;	/// Traders log file CSV
 
 	public DoubleAuctionMarketEnv()
-	{
+	{		
 		// Open log files
 		File folder=new File("./logs");
 		folder.mkdir();
@@ -100,8 +101,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 		}
 	}
 
-  @Override
-	public void init(String[] args) {
+    @Override
+	public void init(String[] args)
+    {
 		super.init(new String[] { args[5] } );
 
 		logger.info("Initiating simulation");
@@ -132,7 +134,8 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 	 * @param step	number of actual step
 	 */
 	@Override
-	protected void stepStarted(int step) {
+	protected void stepStarted(int step)
+	{
 		clearAllPercepts();
 
 		// End of simulation
@@ -330,43 +333,55 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
     @Override
 	public boolean executeAction(String ag, Structure action)
 	{
-		if (action.getFunctor().equals("sell")) {
+		if (action.getFunctor().equals("sell"))
+		{
 			int agent_id_operation;
-			try {
+			try
+			{
 				agent_id_operation = (int)((NumberTerm)action.getTerm(0)).solve();
 				int shares = (int)((NumberTerm)action.getTerm(1)).solve();
 				double price = ((NumberTerm)action.getTerm(2)).solve();
 				listOfSells.add(new Operation(OperationType.SELL, ag, agent_id_operation,
 					shares, price));
-			} catch (NoValueException e) {
+			} 
+			catch (NoValueException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
-		else if (action.getFunctor().equals("buy")) {
+		else if (action.getFunctor().equals("buy"))
+		{
 			int agent_id_operation;
-			try {
+			try
+			{
 				agent_id_operation = (int)((NumberTerm)action.getTerm(0)).solve();
 				int shares = (int)((NumberTerm)action.getTerm(1)).solve();
 				double price = ((NumberTerm)action.getTerm(2)).solve();
 				listOfBuys.add(new Operation(OperationType.BUY, ag, agent_id_operation,
 					shares, price));
-			} catch (NoValueException e) {
+			}
+			catch (NoValueException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		else if (action.getFunctor().equals("none")) {
+		else if (action.getFunctor().equals("none"))
+		{
 			// Trader performs no operation
 		}
-		else if (action.getFunctor().equals("broken")) {
+		else if (action.getFunctor().equals("broken"))
+		{
 			brokensReceived.incrementAndGet();
 		}
-		else if (action.getFunctor().equals("start")) {
+		else if (action.getFunctor().equals("start"))
+		{
 			// Trader initialization
 		}
-		else if (action.getFunctor().equals("end")) {
+		else if (action.getFunctor().equals("end"))
+		{
 			// Read parameters
 			// log_trader(MyName,InitIncome,InitShares,OpProb,SellProb,Inc,Shares,
 			// NbSellSucc,NbSellFail,NbBuySucc,NbBuyFail)
@@ -387,7 +402,8 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 				// Save info
 				synchronized(endsReceived)
 				{
-					try {
+					try
+					{
 						ftraders.printf(Locale.US, "%-10s %10.2f %10d %6.2f %8.2f %6.2f "
 								+ "%5d %6.2f %13d %14d %12d %13d\n",
 						                  traderName, initIncome, initShares, opProb, sellProb,
@@ -398,7 +414,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 						                  traderName, initIncome, initShares, opProb, sellProb,
 										  income, shares, income+shares*marketPrice,
 										  nbSellSuccess, nbSellFailures, nbBuySuccess, nbBuyFailures);
-					} catch (Exception e) {
+					}
+					catch (Exception e)
+					{
 						e.printStackTrace();
 						return false;
 					}
@@ -410,12 +428,16 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment {
 					}
 				}
 
-			} catch (NoValueException e1) {
+			} 
+			catch (NoValueException e1)
+			{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
-		} else {
+		} 
+		else 
+		{
 		   	return false;
 	    }
 
