@@ -9,12 +9,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/flanagan.jar"/>
-	<classpathentry kind="lib" path="libs/cartago-2.3.jar"/>
 	<classpathentry kind="lib" path="/opt/Mathematica/SystemFiles/Links/JLink/JLink.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/opt/Mathematica/SystemFiles/Links/JLink/Documentation/JavaDoc/"/>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/opt/Mathematica/SystemFiles/Links/JLink/SystemFiles/Libraries/Linux-x86-64"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/c4jason.jar"/>
+	<classpathentry kind="lib" path="libs/cartago.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

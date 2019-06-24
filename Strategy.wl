@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 Strategy[window1_, window2_, priceList_] := Block[{mAvg1, mAvg2},
-	If[Length[priceList] < window1 || Length[priceList] < window2,
+	If[Length[priceList] <=  window1 || Length[priceList] <= window2,
 		Return[True]
 	];
 

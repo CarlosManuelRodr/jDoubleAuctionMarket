@@ -10,7 +10,7 @@ MAS doubleAuctionMarket {
 			// 5. Maximum percentage of broken traders (if greater, stop simulation)
 			// 6. Step time (ms)
 
-    agents: wl_trader #5; trader zi_trader #95;
+    agents: ma_trader #30; trader zi_trader #70;
     classpath: "/opt/Mathematica/SystemFiles/Links/JLink/JLink.jar";
 	aslSourcePath: "src/asl";
 }

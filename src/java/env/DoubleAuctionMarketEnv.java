@@ -59,10 +59,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 	private ConcurrentSkipListSet<Operation> listOfBuys = new ConcurrentSkipListSet<Operation>();  // List of BUY operations
 	private ConcurrentSkipListSet<Operation> listOfSells = new ConcurrentSkipListSet<Operation>(); // List of SELL operations
 
-	private PrintWriter fmarket;	    /// Market log file
-	private PrintWriter ftraders;		/// Traders log file
 	private PrintWriter fmarketCSV;		/// Market log file CSV
 	private PrintWriter ftradersCSV;	/// Traders log file CSV
+	private PrintWriter orderBook;		/// Order book log file
 
 	public DoubleAuctionMarketEnv()
 	{		
@@ -78,20 +77,16 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 		try
 		{
 			String header = "Step Price ManagerIncome NbOp NbSh\n";
-			fmarket = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/market.txt"));
-			fmarket.print(header);
 			header = "Step,Price,ManagerIncome,NbOp,NbSh\n";
 			fmarketCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/market.csv"));
 			fmarketCSV.print(header);
 
-			header = "TraderName InitIncome InitShares OpProb SellProb Income Shares " 
-			         + "Wealth NbSellSuccess NbSellFailures NbBuySuccess NbBuyFailures\n";
-			ftraders = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/traders.txt"));
-			ftraders.print(header);
 			header = "TraderName,InitIncome,InitShares,OpProb,SellProb,Income,Shares,"
 					+ "Wealth,NbSellSuccess,NbSellFailures,NbBuySuccess,NbBuyFailures\n";
 			ftradersCSV = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/traders.csv"));
 			ftradersCSV.print(header);
+			
+			orderBook = new PrintWriter(new FileWriter("./logs/" + dateFolder + "/order_book.csv"));
 		}
 		catch (IOException e)
 		{
@@ -119,10 +114,9 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 		super.stop();
 
 		// Close log files
-		fmarket.close();
-		ftraders.close();
 		fmarketCSV.close();
 		ftradersCSV.close();
+		orderBook.close();
 	}
 
 
@@ -141,11 +135,10 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 		{
 			try
 			{
-				// Jason 2.4 adds time to stopMAS
-				// getEnvironmentInfraTier().getRuntimeServices().stopMAS;
 				getEnvironmentInfraTier().getRuntimeServices().stopMAS();
 			}
-			catch (Exception e){
+			catch (Exception e)
+			{
 				e.printStackTrace();
 				System.exit(1);
 			}
@@ -159,8 +152,20 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 			marketPrice = 0;
 
 			// Market matching
-			//logger.info("List of buys: " + listOfBuys);
-			//logger.info("List of sells: " + listOfSells);
+			orderBook.println("Step: " + step);
+			if (listOfBuys.size() != 0 || listOfSells.size() != 0)
+			{
+				for (Operation op : listOfBuys)
+					orderBook.println(op.toString());
+				for (Operation op : listOfSells)
+					orderBook.println(op.toString());
+			}
+			else
+			{
+				orderBook.println("Nothing");
+			}
+			
+			
 			Operation opBuy = null, opSell = null;
 			String buyerName, sellerName;
 			int buyShares, sellShares, sharesTraded, sellerIdOperation, buyerIdOperation;
@@ -287,8 +292,6 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 
 			try
 			{
-				fmarket.printf(Locale.US, "%4d %5.2f %13.2f %4d %4d\n",
-								step, marketPrice, managerIncome, nbOperations, nbSharesTraded);
 				fmarketCSV.printf(Locale.US, "%d,%.2f,%.2f,%d,%d\n",
 								  step, marketPrice, managerIncome, nbOperations, nbSharesTraded);
 			}
@@ -413,16 +416,11 @@ public class DoubleAuctionMarketEnv extends TimeSteppedEnvironment
 				{
 					try
 					{
-						ftraders.printf(Locale.US, "%-10s %10.2f %10d %6.2f %8.2f %6.2f "
-								+ "%5d %6.2f %13d %14d %12d %13d\n",
-						                  traderName, initIncome, initShares, opProb, sellProb,
-										  income, shares, income+shares*marketPrice,
-										  nbSellSuccess, nbSellFailures, nbBuySuccess, nbBuyFailures);
 						ftradersCSV.printf(Locale.US, "%s,%.2f,%d,%.2f,%.2f,%.2f,%d,%.2f,"
-								+ "%d,%d,%d,%d\n",
-						                  traderName, initIncome, initShares, opProb, sellProb,
-										  income, shares, income+shares*marketPrice,
-										  nbSellSuccess, nbSellFailures, nbBuySuccess, nbBuyFailures);
+										   + "%d,%d,%d,%d\n",
+						                   traderName, initIncome, initShares, opProb, sellProb,
+										   income, shares, income+shares*marketPrice,
+										   nbSellSuccess, nbSellFailures, nbBuySuccess, nbBuyFailures);
 					}
 					catch (Exception e)
 					{

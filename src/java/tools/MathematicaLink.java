@@ -12,6 +12,7 @@ import env.DoubleAuctionMarketEnv;
 public class MathematicaLink
 {
 	private static KernelLink ml = null;
+	static boolean busy = false;
 	static Logger logger = Logger.getLogger(DoubleAuctionMarketEnv.class.getName());
 	
 	public static void StartLink() throws MathLinkException
@@ -44,9 +45,10 @@ public class MathematicaLink
 				+ IntegerListToString(priceList) + "]";
 		
 		logger.info("WL Evaluating: " + f);
-        ml.evaluate(f);
-        ml.waitForAnswer();
-        boolean result = ml.getBoolean();
+		
+		ml.evaluate(f);
+	    ml.waitForAnswer();
+	    boolean result = ml.getBoolean();
 		return result;
 	}
 	
