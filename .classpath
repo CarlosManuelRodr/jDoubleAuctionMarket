@@ -15,7 +15,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/opt/Mathematica/SystemFiles/Links/JLink/SystemFiles/Libraries/Linux-x86-64"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/c4jason.jar"/>
-	<classpathentry kind="lib" path="libs/cartago.jar"/>
+	<classpathentry kind="lib" path="libs/cartago-2.3.jar"/>
+	<classpathentry kind="lib" path="libs/jaca-2.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
