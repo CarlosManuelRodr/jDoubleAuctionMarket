@@ -13,6 +13,8 @@ Se realizo la ejecución de una simulación de una subasta doble que representa 
 * Agentes con Zero Inteligencia (ZI): Son agentes que realizan operaciones de compra/venta dependiendo de variables aleatorias generadas por distribuciones de probabilidad.
 * Agentes Media Móvil (MA): Son agentes que deciden si comprar o vender dependiendo de la cruza de medias móviles.
 
+![maPlot](https://raw.githubusercontent.com/CarlosManuelRodr/jDoubleAuctionMarket/master/img/stockMA.png)
+
 Para el experimento se dejó una cantidad fija de 100 agentes, y se varió la proporción de agentes del tipo ZI y MA.
 
 ## Resultados
