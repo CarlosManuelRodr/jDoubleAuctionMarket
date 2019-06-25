@@ -9,6 +9,11 @@ import com.wolfram.jlink.MathLinkFactory;
 
 import env.DoubleAuctionMarketEnv;
 
+
+/** 
+	Wrapper to execute a single Wolfram Language function that contains the strategy
+*/
+
 public class MathematicaLink
 {
 	private static KernelLink ml = null;

@@ -2,17 +2,16 @@ MAS doubleAuctionMarket
 {
 	infrastructure: Centralised
 
-    environment: env.DoubleAuctionMarketEnv(2, spread, 4, 5000, 30, 6000)
+    environment: env.DoubleAuctionMarketEnv(100, spread, 4, 5000, 30, 6000)
 			// Parameters:
-			// 1. Number of traders
+			// 1. Number of traders (can be overriden in GUI)
 			// 2. Price policy (i.e. min, max, avg, spread)
 			// 3. When Price policy is "spread", percentage for the market maker
 			// 4. Number of steps to be simulated
 			// 5. Maximum percentage of broken traders (if greater, stop simulation)
 			// 6. Step time (ms)
 
-    agents: trader zi_trader agentArchClass jaca.CAgentArch #2;
-    classpath: "libs/cartago-2.3.jar";"libs/jaca-2.3.jar";
-    //"/opt/Mathematica/SystemFiles/Links/JLink/JLink.jar";
+    agents: admin agentArchClass env.DAAgentArch;
+    classpath: "libs/cartago-2.3.jar";"libs/jaca-2.3.jar";"/opt/Mathematica/SystemFiles/Links/JLink/JLink.jar";
 	aslSourcePath: "src/asl";
 }

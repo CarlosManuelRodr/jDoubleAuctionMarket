@@ -6,17 +6,12 @@ nb_success(buy,0).             // Number of successful buy operations
 nb_failures(sell,0).           // Number of fail sell operations
 nb_failures(buy,0).            // Number of fail buy operations
 
-operation_beta(1,1).
-sell_beta(1,1).
 cash_beta(1,1).
 min_cash(10).
 max_cash(10).
 shares_beta(1,1).
 min_shares(10).
 max_shares(10).
-variability_beta(1,1).
-min_variability(0.1).
-max_variability(0.1).
 
 // A generic trader is broken if he does not have shares
 // and he has less cash than the market price for one action.
@@ -28,30 +23,20 @@ broken :- shares(0) & cash(C) & market_price(P) & C <= P.
 // Init step
 +step(0) <-
 	!init.
-	
-+!init :
-	operation_beta(OpA,OpB) & sell_beta(SellA,SellB) & variability_beta(VarA,VarB) & min_variability(MinVar) & max_variability(MaxVar)
-  <- +probability(operation, tools.beta(OpA,OpB));
-     +probability(sell, tools.beta(SellA,SellB));
-     +variability(math.floor(tools.beta(VarA,VarB) * (MaxVar-MinVar)) + MinVar);
-     MaWindow = tools.uniform_int(10, 100);
-     +ma_window1(MaWindow);
-     +ma_window2(math.floor(MaWindow / 2));
-     !generic_init.
 
 
 // Generic set-up plan
-+!generic_init :
++!init :
 	cash_beta(CashA,CashB) & min_cash(MinCash) & max_cash(MaxCash) & shares_beta(SharesA,SharesB) & min_shares(MinShares) & max_shares(MaxShares)
 	<-
 	BetaCash = tools.beta(CashA,CashB);
 	InitCash = math.floor(BetaCash * (MaxCash-MinCash)) + MinCash;
-  +cash(InitCash);
-  +init_cash(InitCash);
-  BetaShares = tools.beta(SharesA,SharesB);
+    +cash(InitCash);
+    +init_cash(InitCash);
+    BetaShares = tools.beta(SharesA,SharesB);
 	InitShares = math.floor(BetaShares * (MaxShares-MinShares)) + MinShares;
-  +shares(InitShares);
-  +init_shares(InitShares);
+    +shares(InitShares);
+    +init_shares(InitShares);
 	start.
 
 // Generic end plan

@@ -10,6 +10,10 @@ import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Term;
 
 
+/** 
+	Implements MathematicaLink as an AgentSpeak callable ArithFunction
+*/
+
 public class mathematicaStrategy extends DefaultArithFunction
 {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +42,7 @@ public class mathematicaStrategy extends DefaultArithFunction
 			for (Term priceTerm : prices)
 				priceList.add( ((NumberTerm)priceTerm).solve() );
 			
+			// Return 1 if the agent should buy, 0 if it should sell.
 			if (MathematicaLink.ExecuteStrategy(window1, window2, priceList))
 				return 1.0;
 			else
