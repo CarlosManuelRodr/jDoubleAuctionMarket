@@ -37,7 +37,7 @@ public class DoubleAuctionMarketEnv extends CustomTimeSteppedEnvironment
 		FunctionRegister.addFunction(uniformInt.class);
 		FunctionRegister.addFunction(normal.class);
 		FunctionRegister.addFunction(movingAverage.class);
-		FunctionRegister.addFunction(mathematicaStrategy.class);
+		//FunctionRegister.addFunction(mathematicaStrategy.class);
 	}
 
 	private static DoubleAuctionMarketEnv instance;
